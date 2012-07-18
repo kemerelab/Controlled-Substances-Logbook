@@ -12,72 +12,17 @@
 
 #import "MBProgressHUD.h"
 
-@interface MasterViewController ()
-- (void)configureCell:(UITableViewCell *)cell atIndexPath:(NSIndexPath *)indexPath;
-@end
+#import "GCSubstanceSectionController.h"
+#import "GCRetractableSectionController.h"
+
+#import "AddNewContainerViewController.h"
 
 @implementation MasterViewController
 
-@synthesize spreadsheet, worksheet;
-@synthesize substances;
+@synthesize substanceRetractableControllers, selectedSubstance, pop;
 @synthesize detailViewController = _detailViewController;
 @synthesize fetchedResultsController = __fetchedResultsController;
 @synthesize managedObjectContext = __managedObjectContext;
-
-- (void) handleGDataFetchError:(NSError*)error
-{
-    NSLog(@"%@",error);
-    [MBProgressHUD hideHUDForView:self.detailViewController.view animated:YES];
-    return;
-}
-
-- (void) loggedIn
-{
-    NSLog(@"LOGGED IN ! %@", self.detailViewController.service);
-    MBProgressHUD* hud = [MBProgressHUD HUDForView:self.detailViewController.view];
-    hud.labelText = @"Retreiving Data...";
-    
-    GDataQuerySpreadsheet* query = [GDataQuerySpreadsheet queryWithFeedURL:[NSURL URLWithString:kGDataGoogleSpreadsheetsPrivateFullFeed]];
-    query.titleQuery = @"Controlled Substances Log";
-    [self.detailViewController.service fetchFeedWithQuery:query completionHandler:^(GDataServiceTicket *ticket, GDataFeedBase *feed, NSError *error){
-        if (error) [self handleGDataFetchError:error];
-        else {
-            NSLog(@"Got Spreadsheet.");
-            self.spreadsheet = [[feed entries] objectAtIndex:0];
-            [self.detailViewController.service fetchFeedWithURL:[self.spreadsheet worksheetsFeedURL] completionHandler:^(GDataServiceTicket *ticket, GDataFeedBase *feed, NSError *error){
-                
-                if (error) [self handleGDataFetchError:error];
-                else {
-                    NSLog(@"Got Worksheets.");
-                    self.worksheet = [[feed entries] objectAtIndex:0];
-                    GDataQuerySpreadsheet* query = [GDataQuerySpreadsheet queryWithFeedURL:[[self.worksheet cellsLink] URL]];
-                    query.shouldReturnEmpty = YES;
-                    [self.detailViewController.service fetchFeedWithQuery:query delegate:self didFinishSelector:@selector(ticket:didFinishCellFeed:error:)];
-                }
-                
-            }];
-        }
-    }];
-}
-
-- (void) ticket: (GDataServiceTicket *)ticket
-didFinishCellFeed:(GDataFeedBase *)feed
-          error:(NSError *)error{
-    if (error) [self handleGDataFetchError:error];
-    else {
-        NSLog(@"Got cells...");
-        NSMutableDictionary* subsDict = [[NSMutableDictionary alloc] init];
-        for (int i = 0; i < [[feed entries] count]; i++){
-            
-            GDataEntrySpreadsheetCell *entry = [[feed entries] objectAtIndex:i];
-            if ([[[entry cell] resultString] length] == 0) continue;
-            
-            
-            
-            
-        }
-    }
-}
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -86,6 +31,7 @@ didFinishCellFeed:(GDataFeedBase *)feed
         self.title = NSLocalizedString(@"Master", @"Master");
         self.clearsSelectionOnViewWillAppear = NO;
         self.contentSizeForViewInPopover = CGSizeMake(320.0, 600.0);
+        self.substanceRetractableControllers = [[NSMutableArray alloc] initWithCapacity:25];
     }
     return self;
 }
@@ -99,13 +45,15 @@ didFinishCellFeed:(GDataFeedBase *)feed
     UIBarButtonItem *addButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:self action:@selector(insertNewObject:)];
     self.navigationItem.rightBarButtonItem = addButton;
     
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(loggedIn) name:@"LoggedIn" object:nil];
-}
-
-- (void)viewDidUnload
-{
-    [super viewDidUnload];
-    // Release any retained subviews of the main view.
+    //[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(loggedIn) name:@"LoggedIn" object:nil];
+    
+    NSArray *entries = [self.fetchedResultsController fetchedObjects];
+    for (int i = 0; i < [entries count]; i++){
+        Substance *s = [entries objectAtIndex:i];
+        GCSubstanceSectionController* new = [[GCSubstanceSectionController alloc] initWithSubstance:s inViewController:self];
+        new.managedObjectContext = self.managedObjectContext;
+        [self.substanceRetractableControllers insertObject:new atIndex:i];
+    }
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
@@ -115,21 +63,55 @@ didFinishCellFeed:(GDataFeedBase *)feed
 
 - (void)insertNewObject:(id)sender
 {
+    NSMutableArray *subs = [[NSMutableArray alloc] init];
+    for (GCSubstanceSectionController *con in self.substanceRetractableControllers){
+        [subs addObject:con.substance];
+    }
+    AddNewContainerViewController* newcon = [[AddNewContainerViewController alloc] initWithSubstances:[NSArray arrayWithArray:subs]];
+    newcon.masterDelegate = self;
+    self.pop = [[UIPopoverController alloc] initWithContentViewController:newcon];
+    [self.pop presentPopoverFromBarButtonItem:self.navigationItem.rightBarButtonItem permittedArrowDirections:UIPopoverArrowDirectionUp animated:YES];
+}
+
+- (void)addContainerWithSubstance:(Substance*)s orNewSubstance:(NSString*)new
+{
+    [self.pop dismissPopoverAnimated:YES];
     NSManagedObjectContext *context = [self.fetchedResultsController managedObjectContext];
-    NSEntityDescription *entity = [[self.fetchedResultsController fetchRequest] entity];
-    NSManagedObject *newManagedObject = [NSEntityDescription insertNewObjectForEntityForName:[entity name] inManagedObjectContext:context];
     
-    // If appropriate, configure the new managed object.
-    // Normally you should use accessor methods, but using KVC here avoids the need to add a custom class to the template.
-    [newManagedObject setValue:[NSDate date] forKey:@"timeStamp"];
-    
-    // Save the context.
-    NSError *error = nil;
-    if (![context save:&error]) {
-         // Replace this implementation with code to handle the error appropriately.
-         // abort() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development. 
-        NSLog(@"Unresolved error %@, %@", error, [error userInfo]);
-        abort();
+    if (s == nil) {
+        // Create new substance.
+        Substance *newSubstance = [NSEntityDescription insertNewObjectForEntityForName:@"Substance" inManagedObjectContext:context];
+        newSubstance.name = new;
+        
+        Container *newContainer = [NSEntityDescription insertNewObjectForEntityForName:@"Container" inManagedObjectContext:context];
+        newContainer.name = @"New Container";
+        newContainer.substance = newSubstance;
+        
+        [newSubstance addContainersObject:newContainer];
+        
+        NSError *error = nil;
+        if (![context save:&error]) {
+            // Replace this implementation with code to handle the error appropriately.
+            // abort() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development. 
+            NSLog(@"Unresolved error %@, %@", error, [error userInfo]);
+            abort();
+        }
+    } else {
+        
+        Container *newContainer = [NSEntityDescription insertNewObjectForEntityForName:@"Container" inManagedObjectContext:context];
+        newContainer.name = @"New Container";
+        newContainer.substance = s;
+        
+        [s addContainersObject:newContainer];
+        
+        // Save the context.
+        NSError *error = nil;
+        if (![context save:&error]) {
+            // Replace this implementation with code to handle the error appropriately.
+            // abort() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development. 
+            NSLog(@"Unresolved error %@, %@", error, [error userInfo]);
+            abort();
+        }
     }
 }
 
@@ -138,28 +120,23 @@ didFinishCellFeed:(GDataFeedBase *)feed
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
     //return [[self.fetchedResultsController sections] count];
-    return 1;
+    return [self.substanceRetractableControllers count];
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
     //id <NSFetchedResultsSectionInfo> sectionInfo = [[self.fetchedResultsController sections] objectAtIndex:section];
     //return [sectionInfo numberOfObjects];
-    return [self.substances count];
+    GCSubstanceSectionController* sectionController = [self.substanceRetractableControllers objectAtIndex:section];
+    return sectionController.numberOfRow;
 }
 
 // Customize the appearance of table view cells.
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    static NSString *CellIdentifier = @"Cell";
-    
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
-    if (cell == nil) {
-        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
-    }
-
-    [self configureCell:cell atIndexPath:indexPath];
-    return cell;
+    GCSubstanceSectionController* sectionController = [self.substanceRetractableControllers objectAtIndex:indexPath.section];
+    UITableViewCell* ret = [sectionController cellForRow:indexPath.row];
+    return ret;
 }
 
 - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath
@@ -192,8 +169,11 @@ didFinishCellFeed:(GDataFeedBase *)feed
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    NSManagedObject *object = [[self fetchedResultsController] objectAtIndexPath:indexPath];
-    self.detailViewController.detailItem = object;
+    GCSubstanceSectionController* sectionController = [self.substanceRetractableControllers objectAtIndex:indexPath.section];
+    self.selectedSubstance = sectionController.substance;
+    [sectionController didSelectCellAtRow:indexPath.row];
+    [self.tableView selectRowAtIndexPath:indexPath animated:NO scrollPosition:UITableViewScrollPositionNone];
+    return;
 }
 
 #pragma mark - Fetched results controller
@@ -204,16 +184,20 @@ didFinishCellFeed:(GDataFeedBase *)feed
         return __fetchedResultsController;
     }
     
+    NSLog(@"Creating fetch request...");
     NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] init];
     // Edit the entity name as appropriate.
-    NSEntityDescription *entity = [NSEntityDescription entityForName:@"Event" inManagedObjectContext:self.managedObjectContext];
+    //NSEntityDescription *entity = [NSEntityDescription entityForName:@"Event" inManagedObjectContext:self.managedObjectContext];
+    //[fetchRequest setEntity:entity];
+    NSEntityDescription *entity = [NSEntityDescription entityForName:@"Substance" inManagedObjectContext:self.managedObjectContext];
     [fetchRequest setEntity:entity];
     
     // Set the batch size to a suitable number.
     [fetchRequest setFetchBatchSize:20];
     
     // Edit the sort key as appropriate.
-    NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"timeStamp" ascending:NO];
+    //NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"timeStamp" ascending:NO];
+    NSSortDescriptor *sortDescriptor = [[NSSortDescriptor alloc] initWithKey:@"name" ascending:NO];
     NSArray *sortDescriptors = [NSArray arrayWithObjects:sortDescriptor, nil];
     
     [fetchRequest setSortDescriptors:sortDescriptors];
@@ -237,19 +221,24 @@ didFinishCellFeed:(GDataFeedBase *)feed
 
 - (void)controllerWillChangeContent:(NSFetchedResultsController *)controller
 {
-    [self.tableView beginUpdates];
+    //[self.tableView beginUpdates];
+    NSLog(@"I WILL CHANGESSSS");
 }
 
 - (void)controller:(NSFetchedResultsController *)controller didChangeSection:(id <NSFetchedResultsSectionInfo>)sectionInfo
            atIndex:(NSUInteger)sectionIndex forChangeType:(NSFetchedResultsChangeType)type
 {
+    NSLog(@"Change section...");
     switch(type) {
         case NSFetchedResultsChangeInsert:
-            [self.tableView insertSections:[NSIndexSet indexSetWithIndex:sectionIndex] withRowAnimation:UITableViewRowAnimationFade];
+            //[self.tableView insertSections:[NSIndexSet indexSetWithIndex:sectionIndex] withRowAnimation:UITableViewRowAnimationFade];
+            {
+                //
+            }
             break;
             
         case NSFetchedResultsChangeDelete:
-            [self.tableView deleteSections:[NSIndexSet indexSetWithIndex:sectionIndex] withRowAnimation:UITableViewRowAnimationFade];
+            //[self.tableView deleteSections:[NSIndexSet indexSetWithIndex:sectionIndex] withRowAnimation:UITableViewRowAnimationFade];
             break;
     }
 }
@@ -258,47 +247,42 @@ didFinishCellFeed:(GDataFeedBase *)feed
        atIndexPath:(NSIndexPath *)indexPath forChangeType:(NSFetchedResultsChangeType)type
       newIndexPath:(NSIndexPath *)newIndexPath
 {
-    UITableView *tableView = self.tableView;
+    //UITableView *tableView = self.tableView;
+    NSLog(@"Change object... ");
     
     switch(type) {
         case NSFetchedResultsChangeInsert:
-            [tableView insertRowsAtIndexPaths:[NSArray arrayWithObject:newIndexPath] withRowAnimation:UITableViewRowAnimationFade];
+            {
+                NSLog(@"INSERT!");
+                Substance *substance = [controller objectAtIndexPath:newIndexPath];
+                GCSubstanceSectionController *subcon = [[GCSubstanceSectionController alloc] initWithSubstance:substance inViewController:self];
+                subcon.managedObjectContext = self.managedObjectContext;
+                [self.substanceRetractableControllers insertObject:subcon atIndex:indexPath.row];
+            }
+            //[tableView insertRowsAtIndexPaths:[NSArray arrayWithObject:newIndexPath] withRowAnimation:UITableViewRowAnimationFade];
             break;
             
         case NSFetchedResultsChangeDelete:
-            [tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationFade];
+            //[tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationFade];
             break;
             
         case NSFetchedResultsChangeUpdate:
-            [self configureCell:[tableView cellForRowAtIndexPath:indexPath] atIndexPath:indexPath];
+            //[self configureCell:[tableView cellForRowAtIndexPath:indexPath] atIndexPath:indexPath];
             break;
             
         case NSFetchedResultsChangeMove:
-            [tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationFade];
-            [tableView insertRowsAtIndexPaths:[NSArray arrayWithObject:newIndexPath]withRowAnimation:UITableViewRowAnimationFade];
+            //[tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationFade];
+            //[tableView insertRowsAtIndexPaths:[NSArray arrayWithObject:newIndexPath]withRowAnimation:UITableViewRowAnimationFade];
             break;
     }
 }
 
 - (void)controllerDidChangeContent:(NSFetchedResultsController *)controller
 {
-    [self.tableView endUpdates];
-}
-
-/*
-// Implementing the above methods to update the table view in response to individual changes may have performance implications if a large number of changes are made simultaneously. If this proves to be an issue, you can instead just implement controllerDidChangeContent: which notifies the delegate that all section and object changes have been processed. 
- 
- - (void)controllerDidChangeContent:(NSFetchedResultsController *)controller
-{
-    // In the simplest, most efficient, case, reload the table view.
+    //[self.tableView endUpdates];
+    NSLog(@"Finished...");
     [self.tableView reloadData];
-}
- */
-
-- (void)configureCell:(UITableViewCell *)cell atIndexPath:(NSIndexPath *)indexPath
-{
-    NSManagedObject *object = [self.fetchedResultsController objectAtIndexPath:indexPath];
-    cell.textLabel.text = [[object valueForKey:@"timeStamp"] description];
+    
 }
 
 @end

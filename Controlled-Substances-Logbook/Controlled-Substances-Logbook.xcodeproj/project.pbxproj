@@ -33,6 +33,22 @@
 		C0E232FB15B5E1D8004F7D03 /* MBProgressHUD.m in Sources */ = {isa = PBXBuildFile; fileRef = C0E232F915B5E1D8004F7D03 /* MBProgressHUD.m */; };
 		C0E232FE15B5E1E2004F7D03 /* Reachability.m in Sources */ = {isa = PBXBuildFile; fileRef = C0E232FD15B5E1E2004F7D03 /* Reachability.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		C0E232FF15B5E1E2004F7D03 /* Reachability.m in Sources */ = {isa = PBXBuildFile; fileRef = C0E232FD15B5E1E2004F7D03 /* Reachability.m */; };
+		C0E2334115B7173E004F7D03 /* GCRetractableSectionController.m in Sources */ = {isa = PBXBuildFile; fileRef = C0E2333715B7173E004F7D03 /* GCRetractableSectionController.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
+		C0E2334215B7173E004F7D03 /* DownAccessory.png in Resources */ = {isa = PBXBuildFile; fileRef = C0E2333915B7173E004F7D03 /* DownAccessory.png */; };
+		C0E2334315B7173E004F7D03 /* DownAccessory@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C0E2333A15B7173E004F7D03 /* DownAccessory@2x.png */; };
+		C0E2334415B7173E004F7D03 /* DownAccessoryWhite.png in Resources */ = {isa = PBXBuildFile; fileRef = C0E2333B15B7173E004F7D03 /* DownAccessoryWhite.png */; };
+		C0E2334515B7173E004F7D03 /* DownAccessoryWhite@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C0E2333C15B7173E004F7D03 /* DownAccessoryWhite@2x.png */; };
+		C0E2334615B7173E004F7D03 /* UpAccessory.png in Resources */ = {isa = PBXBuildFile; fileRef = C0E2333D15B7173E004F7D03 /* UpAccessory.png */; };
+		C0E2334715B7173E004F7D03 /* UpAccessory@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C0E2333E15B7173E004F7D03 /* UpAccessory@2x.png */; };
+		C0E2334815B7173E004F7D03 /* UpAccessoryWhite.png in Resources */ = {isa = PBXBuildFile; fileRef = C0E2333F15B7173E004F7D03 /* UpAccessoryWhite.png */; };
+		C0E2334915B7173E004F7D03 /* UpAccessoryWhite@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = C0E2334015B7173E004F7D03 /* UpAccessoryWhite@2x.png */; };
+		C0E2335015B718A8004F7D03 /* GCSubstanceSectionController.m in Sources */ = {isa = PBXBuildFile; fileRef = C0E2334F15B718A8004F7D03 /* GCSubstanceSectionController.m */; };
+		C0E2335315B723AE004F7D03 /* Substance.m in Sources */ = {isa = PBXBuildFile; fileRef = C0E2335215B723AE004F7D03 /* Substance.m */; };
+		C0E2335715B72411004F7D03 /* Container.m in Sources */ = {isa = PBXBuildFile; fileRef = C0E2335615B72411004F7D03 /* Container.m */; };
+		C0E2335A15B72426004F7D03 /* Consumption.m in Sources */ = {isa = PBXBuildFile; fileRef = C0E2335915B72426004F7D03 /* Consumption.m */; };
+		C0E2335D15B72436004F7D03 /* Transfer.m in Sources */ = {isa = PBXBuildFile; fileRef = C0E2335C15B72436004F7D03 /* Transfer.m */; };
+		C0E2336515B73B1D004F7D03 /* AddNewContainerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C0E2336315B73B1C004F7D03 /* AddNewContainerViewController.m */; };
+		C0E2336615B73B1D004F7D03 /* AddNewContainerViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = C0E2336415B73B1C004F7D03 /* AddNewContainerViewController.xib */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -437,6 +453,29 @@
 		C0E232F915B5E1D8004F7D03 /* MBProgressHUD.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MBProgressHUD.m; sourceTree = "<group>"; };
 		C0E232FC15B5E1E2004F7D03 /* Reachability.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Reachability.h; sourceTree = "<group>"; };
 		C0E232FD15B5E1E2004F7D03 /* Reachability.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Reachability.m; sourceTree = "<group>"; };
+		C0E2333615B7173E004F7D03 /* GCRetractableSectionController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GCRetractableSectionController.h; sourceTree = "<group>"; };
+		C0E2333715B7173E004F7D03 /* GCRetractableSectionController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GCRetractableSectionController.m; sourceTree = "<group>"; };
+		C0E2333915B7173E004F7D03 /* DownAccessory.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = DownAccessory.png; sourceTree = "<group>"; };
+		C0E2333A15B7173E004F7D03 /* DownAccessory@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "DownAccessory@2x.png"; sourceTree = "<group>"; };
+		C0E2333B15B7173E004F7D03 /* DownAccessoryWhite.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = DownAccessoryWhite.png; sourceTree = "<group>"; };
+		C0E2333C15B7173E004F7D03 /* DownAccessoryWhite@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "DownAccessoryWhite@2x.png"; sourceTree = "<group>"; };
+		C0E2333D15B7173E004F7D03 /* UpAccessory.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = UpAccessory.png; sourceTree = "<group>"; };
+		C0E2333E15B7173E004F7D03 /* UpAccessory@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "UpAccessory@2x.png"; sourceTree = "<group>"; };
+		C0E2333F15B7173E004F7D03 /* UpAccessoryWhite.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = UpAccessoryWhite.png; sourceTree = "<group>"; };
+		C0E2334015B7173E004F7D03 /* UpAccessoryWhite@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "UpAccessoryWhite@2x.png"; sourceTree = "<group>"; };
+		C0E2334E15B718A8004F7D03 /* GCSubstanceSectionController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GCSubstanceSectionController.h; sourceTree = "<group>"; };
+		C0E2334F15B718A8004F7D03 /* GCSubstanceSectionController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GCSubstanceSectionController.m; sourceTree = "<group>"; };
+		C0E2335115B723AE004F7D03 /* Substance.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Substance.h; path = DataModel/Substance.h; sourceTree = "<group>"; };
+		C0E2335215B723AE004F7D03 /* Substance.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Substance.m; path = DataModel/Substance.m; sourceTree = "<group>"; };
+		C0E2335515B72411004F7D03 /* Container.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Container.h; path = DataModel/Container.h; sourceTree = "<group>"; };
+		C0E2335615B72411004F7D03 /* Container.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Container.m; path = DataModel/Container.m; sourceTree = "<group>"; };
+		C0E2335815B72426004F7D03 /* Consumption.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Consumption.h; path = DataModel/Consumption.h; sourceTree = "<group>"; };
+		C0E2335915B72426004F7D03 /* Consumption.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Consumption.m; path = DataModel/Consumption.m; sourceTree = "<group>"; };
+		C0E2335B15B72436004F7D03 /* Transfer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Transfer.h; path = DataModel/Transfer.h; sourceTree = "<group>"; };
+		C0E2335C15B72436004F7D03 /* Transfer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Transfer.m; path = DataModel/Transfer.m; sourceTree = "<group>"; };
+		C0E2336215B73B1C004F7D03 /* AddNewContainerViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AddNewContainerViewController.h; sourceTree = "<group>"; };
+		C0E2336315B73B1C004F7D03 /* AddNewContainerViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AddNewContainerViewController.m; sourceTree = "<group>"; };
+		C0E2336415B73B1C004F7D03 /* AddNewContainerViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = AddNewContainerViewController.xib; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -512,12 +551,18 @@
 				C0E2314C15B5C4F7004F7D03 /* AppDelegate.m */,
 				C0E2315115B5C4F7004F7D03 /* MasterViewController.h */,
 				C0E2315215B5C4F7004F7D03 /* MasterViewController.m */,
+				C0E2336215B73B1C004F7D03 /* AddNewContainerViewController.h */,
+				C0E2336315B73B1C004F7D03 /* AddNewContainerViewController.m */,
+				C0E2336415B73B1C004F7D03 /* AddNewContainerViewController.xib */,
 				C0E2315415B5C4F7004F7D03 /* DetailViewController.h */,
 				C0E2315515B5C4F7004F7D03 /* DetailViewController.m */,
 				C0E2315715B5C4F7004F7D03 /* MasterViewController.xib */,
 				C0E2315A15B5C4F8004F7D03 /* DetailViewController.xib */,
 				C0E2314E15B5C4F7004F7D03 /* Controlled_Substances_Logbook.xcdatamodeld */,
+				C0E2335415B723B7004F7D03 /* DataModel */,
 				C0E2314315B5C4F7004F7D03 /* Supporting Files */,
+				C0E2334E15B718A8004F7D03 /* GCSubstanceSectionController.h */,
+				C0E2334F15B718A8004F7D03 /* GCSubstanceSectionController.m */,
 			);
 			path = "Controlled-Substances-Logbook";
 			sourceTree = "<group>";
@@ -892,12 +937,45 @@
 		C0E232F115B5DF0D004F7D03 /* Imported */ = {
 			isa = PBXGroup;
 			children = (
+				C0E2333615B7173E004F7D03 /* GCRetractableSectionController.h */,
+				C0E2333715B7173E004F7D03 /* GCRetractableSectionController.m */,
+				C0E2333815B7173E004F7D03 /* Images */,
 				C0E232F815B5E1D8004F7D03 /* MBProgressHUD.h */,
 				C0E232F915B5E1D8004F7D03 /* MBProgressHUD.m */,
 				C0E232FC15B5E1E2004F7D03 /* Reachability.h */,
 				C0E232FD15B5E1E2004F7D03 /* Reachability.m */,
 			);
 			name = Imported;
+			sourceTree = "<group>";
+		};
+		C0E2333815B7173E004F7D03 /* Images */ = {
+			isa = PBXGroup;
+			children = (
+				C0E2333915B7173E004F7D03 /* DownAccessory.png */,
+				C0E2333A15B7173E004F7D03 /* DownAccessory@2x.png */,
+				C0E2333B15B7173E004F7D03 /* DownAccessoryWhite.png */,
+				C0E2333C15B7173E004F7D03 /* DownAccessoryWhite@2x.png */,
+				C0E2333D15B7173E004F7D03 /* UpAccessory.png */,
+				C0E2333E15B7173E004F7D03 /* UpAccessory@2x.png */,
+				C0E2333F15B7173E004F7D03 /* UpAccessoryWhite.png */,
+				C0E2334015B7173E004F7D03 /* UpAccessoryWhite@2x.png */,
+			);
+			path = Images;
+			sourceTree = "<group>";
+		};
+		C0E2335415B723B7004F7D03 /* DataModel */ = {
+			isa = PBXGroup;
+			children = (
+				C0E2335B15B72436004F7D03 /* Transfer.h */,
+				C0E2335C15B72436004F7D03 /* Transfer.m */,
+				C0E2335815B72426004F7D03 /* Consumption.h */,
+				C0E2335915B72426004F7D03 /* Consumption.m */,
+				C0E2335515B72411004F7D03 /* Container.h */,
+				C0E2335615B72411004F7D03 /* Container.m */,
+				C0E2335115B723AE004F7D03 /* Substance.h */,
+				C0E2335215B723AE004F7D03 /* Substance.m */,
+			);
+			name = DataModel;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -1019,6 +1097,15 @@
 				C0E2315915B5C4F7004F7D03 /* MasterViewController.xib in Resources */,
 				C0E2315C15B5C4F8004F7D03 /* DetailViewController.xib in Resources */,
 				C0E2317C15B5CA00004F7D03 /* gear.png in Resources */,
+				C0E2334215B7173E004F7D03 /* DownAccessory.png in Resources */,
+				C0E2334315B7173E004F7D03 /* DownAccessory@2x.png in Resources */,
+				C0E2334415B7173E004F7D03 /* DownAccessoryWhite.png in Resources */,
+				C0E2334515B7173E004F7D03 /* DownAccessoryWhite@2x.png in Resources */,
+				C0E2334615B7173E004F7D03 /* UpAccessory.png in Resources */,
+				C0E2334715B7173E004F7D03 /* UpAccessory@2x.png in Resources */,
+				C0E2334815B7173E004F7D03 /* UpAccessoryWhite.png in Resources */,
+				C0E2334915B7173E004F7D03 /* UpAccessoryWhite@2x.png in Resources */,
+				C0E2336615B73B1D004F7D03 /* AddNewContainerViewController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1060,6 +1147,13 @@
 				C0E2315615B5C4F7004F7D03 /* DetailViewController.m in Sources */,
 				C0E232FA15B5E1D8004F7D03 /* MBProgressHUD.m in Sources */,
 				C0E232FE15B5E1E2004F7D03 /* Reachability.m in Sources */,
+				C0E2334115B7173E004F7D03 /* GCRetractableSectionController.m in Sources */,
+				C0E2335015B718A8004F7D03 /* GCSubstanceSectionController.m in Sources */,
+				C0E2335315B723AE004F7D03 /* Substance.m in Sources */,
+				C0E2335715B72411004F7D03 /* Container.m in Sources */,
+				C0E2335A15B72426004F7D03 /* Consumption.m in Sources */,
+				C0E2335D15B72436004F7D03 /* Transfer.m in Sources */,
+				C0E2336515B73B1D004F7D03 /* AddNewContainerViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -12,17 +12,22 @@
 
 #import <CoreData/CoreData.h>
 #import "GData.h"
+#import "Substance.h"
+#import "Container.h"
 
 @interface MasterViewController : UITableViewController <NSFetchedResultsControllerDelegate>
 
-
-@property (nonatomic, retain) GDataEntrySpreadsheet* spreadsheet;
-@property (nonatomic, retain) GDataEntryWorksheet* worksheet;
-@property (nonatomic, retain) NSMutableArray* substances;
+@property (nonatomic, retain) NSMutableArray* substanceRetractableControllers;
 
 @property (strong, nonatomic) DetailViewController *detailViewController;
 
+@property (nonatomic, retain) Substance *selectedSubstance;
+
 @property (strong, nonatomic) NSFetchedResultsController *fetchedResultsController;
 @property (strong, nonatomic) NSManagedObjectContext *managedObjectContext;
+
+@property (nonatomic, retain) UIPopoverController *pop;
+
+- (void) addContainerWithSubstance:(Substance*)s orNewSubstance:(NSString*)new;
 
 @end
