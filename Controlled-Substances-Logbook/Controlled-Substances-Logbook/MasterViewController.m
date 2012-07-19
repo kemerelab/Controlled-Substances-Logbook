@@ -28,7 +28,7 @@
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
-        self.title = NSLocalizedString(@"Master", @"Master");
+        self.title = NSLocalizedString(@"Container Log", @"Container Log");
         self.clearsSelectionOnViewWillAppear = NO;
         self.contentSizeForViewInPopover = CGSizeMake(320.0, 600.0);
         self.substanceRetractableControllers = [[NSMutableArray alloc] initWithCapacity:25];
@@ -63,28 +63,34 @@
 
 - (void)insertNewObject:(id)sender
 {
+    NSLog(@"HI");
     NSMutableArray *subs = [[NSMutableArray alloc] init];
     for (GCSubstanceSectionController *con in self.substanceRetractableControllers){
         [subs addObject:con.substance];
     }
     AddNewContainerViewController* newcon = [[AddNewContainerViewController alloc] initWithSubstances:[NSArray arrayWithArray:subs]];
     newcon.masterDelegate = self;
-    self.pop = [[UIPopoverController alloc] initWithContentViewController:newcon];
-    [self.pop presentPopoverFromBarButtonItem:self.navigationItem.rightBarButtonItem permittedArrowDirections:UIPopoverArrowDirectionUp animated:YES];
+    if (self.pop == nil) {
+        self.pop = [[UIPopoverController alloc] initWithContentViewController:newcon];
+    }
+    if ([self.pop isPopoverVisible]) [self.pop dismissPopoverAnimated:YES];
+    else [self.pop presentPopoverFromBarButtonItem:self.navigationItem.rightBarButtonItem permittedArrowDirections:UIPopoverArrowDirectionUp animated:YES];
 }
 
-- (void)addContainerWithSubstance:(Substance*)s orNewSubstance:(NSString*)new
+- (void)addContainerWithSubstance:(Substance*)s orNewSubstance:(NSString*)new initialVol:(double)vol name:(NSString*)name
 {
     [self.pop dismissPopoverAnimated:YES];
     NSManagedObjectContext *context = [self.fetchedResultsController managedObjectContext];
     
     if (s == nil) {
+        NSLog(@"No substance selected...");
         // Create new substance.
         Substance *newSubstance = [NSEntityDescription insertNewObjectForEntityForName:@"Substance" inManagedObjectContext:context];
         newSubstance.name = new;
         
         Container *newContainer = [NSEntityDescription insertNewObjectForEntityForName:@"Container" inManagedObjectContext:context];
-        newContainer.name = @"New Container";
+        newContainer.name = name;
+        newContainer.initialVol = [NSNumber numberWithDouble:vol];
         newContainer.substance = newSubstance;
         
         [newSubstance addContainersObject:newContainer];
@@ -98,8 +104,10 @@
         }
     } else {
         
+        NSLog(@"Creating new container...");
         Container *newContainer = [NSEntityDescription insertNewObjectForEntityForName:@"Container" inManagedObjectContext:context];
-        newContainer.name = @"New Container";
+        newContainer.name = name;
+        newContainer.initialVol = [NSNumber numberWithDouble:vol];
         newContainer.substance = s;
         
         [s addContainersObject:newContainer];
@@ -233,7 +241,7 @@
         case NSFetchedResultsChangeInsert:
             //[self.tableView insertSections:[NSIndexSet indexSetWithIndex:sectionIndex] withRowAnimation:UITableViewRowAnimationFade];
             {
-                //
+                NSLog(@"SECTION INSERT");
             }
             break;
             
@@ -255,6 +263,7 @@
             {
                 NSLog(@"INSERT!");
                 Substance *substance = [controller objectAtIndexPath:newIndexPath];
+                NSLog(@"I AM A %@", [[[controller objectAtIndexPath:newIndexPath] entity] name]);
                 GCSubstanceSectionController *subcon = [[GCSubstanceSectionController alloc] initWithSubstance:substance inViewController:self];
                 subcon.managedObjectContext = self.managedObjectContext;
                 [self.substanceRetractableControllers insertObject:subcon atIndex:indexPath.row];
@@ -264,13 +273,18 @@
             
         case NSFetchedResultsChangeDelete:
             //[tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationFade];
+            NSLog(@"DELETE...");
             break;
             
         case NSFetchedResultsChangeUpdate:
+            {
+              NSLog(@"UPDATE... %@", [[[controller objectAtIndexPath:newIndexPath] entity] name]);  
+            }
             //[self configureCell:[tableView cellForRowAtIndexPath:indexPath] atIndexPath:indexPath];
             break;
             
         case NSFetchedResultsChangeMove:
+            NSLog(@"MOVEEE...");
             //[tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationFade];
             //[tableView insertRowsAtIndexPaths:[NSArray arrayWithObject:newIndexPath]withRowAnimation:UITableViewRowAnimationFade];
             break;

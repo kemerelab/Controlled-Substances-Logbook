@@ -37,6 +37,7 @@
     self.splitViewController.delegate = detailViewController;
     self.splitViewController.viewControllers = [NSArray arrayWithObjects:masterNavigationController, detailNavigationController, nil];
     masterViewController.managedObjectContext = self.managedObjectContext;
+    detailViewController.managedObjectContext = self.managedObjectContext;
     self.window.rootViewController = self.splitViewController;
     [self.window makeKeyAndVisible];
     return YES;

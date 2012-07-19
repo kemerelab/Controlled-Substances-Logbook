@@ -49,6 +49,7 @@
 		C0E2335D15B72436004F7D03 /* Transfer.m in Sources */ = {isa = PBXBuildFile; fileRef = C0E2335C15B72436004F7D03 /* Transfer.m */; };
 		C0E2336515B73B1D004F7D03 /* AddNewContainerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C0E2336315B73B1C004F7D03 /* AddNewContainerViewController.m */; };
 		C0E2336615B73B1D004F7D03 /* AddNewContainerViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = C0E2336415B73B1C004F7D03 /* AddNewContainerViewController.xib */; };
+		C0E2339F15B88E9A004F7D03 /* lab-bottle-write-md.png in Resources */ = {isa = PBXBuildFile; fileRef = C0E2339E15B88E9A004F7D03 /* lab-bottle-write-md.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -476,6 +477,7 @@
 		C0E2336215B73B1C004F7D03 /* AddNewContainerViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AddNewContainerViewController.h; sourceTree = "<group>"; };
 		C0E2336315B73B1C004F7D03 /* AddNewContainerViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AddNewContainerViewController.m; sourceTree = "<group>"; };
 		C0E2336415B73B1C004F7D03 /* AddNewContainerViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = AddNewContainerViewController.xib; sourceTree = "<group>"; };
+		C0E2339E15B88E9A004F7D03 /* lab-bottle-write-md.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "lab-bottle-write-md.png"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -543,6 +545,7 @@
 		C0E2314215B5C4F7004F7D03 /* Controlled-Substances-Logbook */ = {
 			isa = PBXGroup;
 			children = (
+				C0E2339E15B88E9A004F7D03 /* lab-bottle-write-md.png */,
 				C0E232F115B5DF0D004F7D03 /* Imported */,
 				C0E2319F15B5DA47004F7D03 /* Headers */,
 				C0E2318115B5D88B004F7D03 /* GData.xcodeproj */,
@@ -553,11 +556,9 @@
 				C0E2315215B5C4F7004F7D03 /* MasterViewController.m */,
 				C0E2336215B73B1C004F7D03 /* AddNewContainerViewController.h */,
 				C0E2336315B73B1C004F7D03 /* AddNewContainerViewController.m */,
-				C0E2336415B73B1C004F7D03 /* AddNewContainerViewController.xib */,
 				C0E2315415B5C4F7004F7D03 /* DetailViewController.h */,
 				C0E2315515B5C4F7004F7D03 /* DetailViewController.m */,
-				C0E2315715B5C4F7004F7D03 /* MasterViewController.xib */,
-				C0E2315A15B5C4F8004F7D03 /* DetailViewController.xib */,
+				C0E2339D15B88E10004F7D03 /* XIBs */,
 				C0E2314E15B5C4F7004F7D03 /* Controlled_Substances_Logbook.xcdatamodeld */,
 				C0E2335415B723B7004F7D03 /* DataModel */,
 				C0E2314315B5C4F7004F7D03 /* Supporting Files */,
@@ -978,6 +979,16 @@
 			name = DataModel;
 			sourceTree = "<group>";
 		};
+		C0E2339D15B88E10004F7D03 /* XIBs */ = {
+			isa = PBXGroup;
+			children = (
+				C0E2336415B73B1C004F7D03 /* AddNewContainerViewController.xib */,
+				C0E2315715B5C4F7004F7D03 /* MasterViewController.xib */,
+				C0E2315A15B5C4F8004F7D03 /* DetailViewController.xib */,
+			);
+			name = XIBs;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -1106,6 +1117,7 @@
 				C0E2334815B7173E004F7D03 /* UpAccessoryWhite.png in Resources */,
 				C0E2334915B7173E004F7D03 /* UpAccessoryWhite@2x.png in Resources */,
 				C0E2336615B73B1D004F7D03 /* AddNewContainerViewController.xib in Resources */,
+				C0E2339F15B88E9A004F7D03 /* lab-bottle-write-md.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

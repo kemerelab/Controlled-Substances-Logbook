@@ -8,6 +8,8 @@
 
 #import "GCSubstanceSectionController.h"
 #import "Container.h"
+#import "MasterViewController.h"
+#import "DetailViewController.h"
 
 @implementation GCSubstanceSectionController
 
@@ -25,6 +27,12 @@
     return self;
 }
 
+- (NSArray*)sortedContainers
+{
+    NSArray *sortDescriptors = [NSArray arrayWithObject:[NSSortDescriptor sortDescriptorWithKey:@"name" ascending:YES]];
+    return [self.substance.containers sortedArrayUsingDescriptors:sortDescriptors];
+}
+
 - (NSString *)title {
     return self.substance.name;
 }
@@ -37,12 +45,27 @@
 - (NSString *)titleContentForRow:(NSUInteger)row {
     //eturn [self.content objectAtIndex:row];    
     Container *c = [self.sortedContainers objectAtIndex:row];
-    return c.name;
+    return [@"    " stringByAppendingString:c.name];
+}
+
+- (UITableViewCell*)contentCellForRow:(NSUInteger)row
+{
+    UITableViewCell* ret = [super contentCellForRow:row];
+    ret.accessoryType = UITableViewCellAccessoryNone;
+    UIColor* aliceBlue = [UIColor colorWithRed:176.0/255 green:226.0/255 blue:255.0/255 alpha:0.5];
+    ret.contentView.backgroundColor = aliceBlue;
+    ret.textLabel.backgroundColor = [UIColor clearColor];
+    
+    return ret;
 }
 
 - (void)didSelectContentCellAtRow:(NSUInteger)row {
     //[self.tableView deselectRowAtIndexPath:[self.tableView indexPathForSelectedRow]
                  //                 animated:YES];
+    NSLog(@"clicked...");
+    MasterViewController* master = (MasterViewController *)self.viewController;
+    DetailViewController* detail = master.detailViewController;
+    detail.container = [self.sortedContainers objectAtIndex:row];
 }
 
 - (void)dealloc {

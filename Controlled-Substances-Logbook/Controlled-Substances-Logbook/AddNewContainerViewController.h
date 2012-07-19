@@ -14,6 +14,10 @@
 
 @property (nonatomic, retain) IBOutlet UITextField *otherField;
 
+@property (nonatomic, retain) IBOutlet UITextField *volField;
+
+@property (nonatomic, retain) IBOutlet UITextField *nameField;
+
 @property (nonatomic, retain) IBOutlet UITableView *substanceTable;
 
 @property (nonatomic, retain) NSArray *substances;

@@ -16,6 +16,11 @@
 
 @implementation DetailViewController
 
+@synthesize managedObjectContext;
+@synthesize transfer, consume, takePicture;
+@synthesize nameLabel, currVolLabel, initVolLabel, expirLabel, volLabel;
+@synthesize image, stepper;
+@synthesize container;
 @synthesize service;
 @synthesize detailItem = _detailItem;
 @synthesize detailDescriptionLabel = _detailDescriptionLabel;
@@ -128,16 +133,51 @@ authenticatedWithError:(NSError *)error {
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
-        self.title = NSLocalizedString(@"Detail", @"Detail");
+        self.title = NSLocalizedString(@"Details", @"Details");
     }
     return self;
+}
+
+- (void) setContainer:(Container *)givenContainer
+{
+    NSLog(@"Setting...");
+    self.nameLabel.text = givenContainer.name;
+    
+    container = givenContainer;
+}
+
+
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
+    return 0;
+}
+
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
+    
+    static NSString *CellIdentifier = @"Cell";
+    
+    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
+    
+    if (cell == nil) {
+        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:CellIdentifier];
+    }
+    
+    return cell;
+}
+
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    return;
+}
+
+-(IBAction)buttonPressed:(id)sender{
+    
 }
 							
 #pragma mark - Split view
 
 - (void)splitViewController:(UISplitViewController *)splitController willHideViewController:(UIViewController *)viewController withBarButtonItem:(UIBarButtonItem *)barButtonItem forPopoverController:(UIPopoverController *)popoverController
 {
-    barButtonItem.title = NSLocalizedString(@"Master", @"Master");
+    barButtonItem.title = NSLocalizedString(@"Log", @"Log");
     [self.navigationItem setLeftBarButtonItem:barButtonItem animated:YES];
     self.masterPopoverController = popoverController;
 }

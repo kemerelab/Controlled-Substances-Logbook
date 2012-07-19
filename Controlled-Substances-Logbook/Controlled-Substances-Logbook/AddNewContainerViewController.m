@@ -11,17 +11,22 @@
 
 @implementation AddNewContainerViewController
 
+@synthesize nameField, volField;
 @synthesize otherField, substanceTable, substances, masterDelegate, selectedSubstance;
 
 - (id) initWithSubstances:(NSArray*)givenSubstances{
     self = [super init];
+    self.substances = givenSubstances;
     return self;
 }
 
 - (void) viewDidLoad
 {
     [super viewDidLoad];
-    self.contentSizeForViewInPopover = CGSizeMake(310, 400.0);
+    self.contentSizeForViewInPopover = CGSizeMake(310, 485.0);
+    self.otherField.placeholder = @"e.x. Water";
+    self.nameField.placeholder = @"e.x. Container A-1";
+    self.volField.placeholder = @"e.x. 100";
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
@@ -44,10 +49,15 @@
     return cell;
 }
 
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    self.selectedSubstance = [self.substances objectAtIndex:indexPath.row];
+}
+
 
 - (IBAction)createPressed
 {
-    [self.masterDelegate addContainerWithSubstance:self.selectedSubstance orNewSubstance:self.otherField.text];
+    [self.masterDelegate addContainerWithSubstance:self.selectedSubstance orNewSubstance:self.otherField.text initialVol:[self.volField.text doubleValue] name:self.nameField.text];
 }
 
 
