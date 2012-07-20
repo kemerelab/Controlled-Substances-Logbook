@@ -18,5 +18,6 @@
 @dynamic person;
 @dynamic origin;
 @dynamic destination;
+@dynamic resultAmt;
 
 @end

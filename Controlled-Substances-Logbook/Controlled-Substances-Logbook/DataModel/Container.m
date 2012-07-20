@@ -15,11 +15,11 @@
 @dynamic image;
 @dynamic initialVol;
 @dynamic name;
-@dynamic transfVol;
-@dynamic consVol;
 @dynamic expiration;
 @dynamic substance;
 @dynamic transfers;
 @dynamic consumptions;
+@dynamic lastUse;
+@dynamic currentVol;
 
 @end

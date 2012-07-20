@@ -15,10 +15,10 @@
 
 @property (nonatomic, retain) NSData * image;
 @property (nonatomic, retain) NSNumber * initialVol;
-@property (nonatomic, retain) NSString * name;
-@property (nonatomic, retain) NSNumber * transfVol;
-@property (nonatomic, retain) NSNumber * consVol;
+@property (nonatomic, retain) NSNumber * currentVol;
+@property (nonatomic, retain) NSString * name;;
 @property (nonatomic, retain) NSDate * expiration;
+@property (nonatomic, retain) NSDate * lastUse;
 @property (nonatomic, retain) Substance *substance;
 @property (nonatomic, retain) NSSet *transfers;
 @property (nonatomic, retain) NSSet *consumptions;

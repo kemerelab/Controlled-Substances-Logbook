@@ -14,6 +14,7 @@
 @interface Consumption : NSManagedObject
 
 @property (nonatomic, retain) NSNumber * volume;
+@property (nonatomic, retain) NSNumber * resultAmt;
 @property (nonatomic, retain) NSDate * date;
 @property (nonatomic, retain) NSString * procedure;
 @property (nonatomic, retain) NSString * person;

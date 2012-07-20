@@ -8,6 +8,9 @@
 
 #import "DetailViewController.h"
 #import "MBProgressHUD.h"
+#import "Consumption.h"
+#import "Transfer.h"
+#import "ConsumptionCell.h"
 
 @interface DetailViewController ()
 @property (strong, nonatomic) UIPopoverController *masterPopoverController;
@@ -16,9 +19,10 @@
 
 @implementation DetailViewController
 
-@synthesize managedObjectContext;
+@synthesize tableView, masterViewController;
+@synthesize managedObjectContext, transactions;
 @synthesize transfer, consume, takePicture;
-@synthesize nameLabel, currVolLabel, initVolLabel, expirLabel, volLabel;
+@synthesize nameLabel, currVolLabel, initialVolLabel, expirLabel, volLabel;
 @synthesize image, stepper;
 @synthesize container;
 @synthesize service;
@@ -64,6 +68,11 @@
     [settingsButton setShowsTouchWhenHighlighted:YES];
     UIBarButtonItem *settingButtonItem =[[UIBarButtonItem alloc] initWithCustomView:settingsButton];
     self.navigationItem.rightBarButtonItem = settingButtonItem;
+    
+    self.stepper.minimumValue = 0;
+    self.stepper.maximumValue = 10;
+    self.stepper.value = 0;
+    
 }
 
 -(void) settingsButtonAction
@@ -142,23 +151,74 @@ authenticatedWithError:(NSError *)error {
 {
     NSLog(@"Setting...");
     self.nameLabel.text = givenContainer.name;
+    self.initialVolLabel.text = [NSString stringWithFormat:@"%4.f mL", [givenContainer.initialVol doubleValue]];
+    self.currVolLabel.text = [NSString stringWithFormat:@"%4.f mL", [givenContainer.currentVol doubleValue]];
     
     container = givenContainer;
+    
+    [self.tableView reloadData];
 }
 
+- (NSArray*)transactions
+{
+    
+    NSLog(@"getting transactions...");
+    NSLog(@"consumptions - %@ : transfers - %@", self.container.consumptions, self.container.transfers);
+    NSArray *sortDescriptors = [NSArray arrayWithObject:[NSSortDescriptor sortDescriptorWithKey:@"date" ascending:NO]];
+    
+    NSSet *trans = [self.container.consumptions setByAddingObjectsFromSet:self.container.transfers];
+    
+    transactions = [trans sortedArrayUsingDescriptors:sortDescriptors];
+
+    NSLog(@"%@", transactions);
+
+    return transactions;
+    
+}
+
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    return 70;
+}
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
-    return 0;
+    return self.transactions.count;
 }
 
-- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
+- (UITableViewCell *)tableView:(UITableView *)givenTableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
     
     static NSString *CellIdentifier = @"Cell";
     
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
+    UITableViewCell *cell = [givenTableView dequeueReusableCellWithIdentifier:CellIdentifier];
     
     if (cell == nil) {
-        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:CellIdentifier];
+        NSArray *nib = [[NSBundle mainBundle] loadNibNamed:@"ConsumptionCell" owner:self options:NULL];
+        cell = (ConsumptionCell*)[nib objectAtIndex:0];
+    }
+    
+    NSManagedObject *obj = [self.transactions objectAtIndex:indexPath.row];
+    
+    if ([[[obj entity]name] isEqualToString:@"Consumption"]){
+        Consumption *cons = (Consumption *)obj;
+        
+        NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+        [formatter setDateFormat:@"M/d/yy 'at' H:mm"];
+        ((ConsumptionCell*)cell).dateLabel.text = [formatter stringFromDate:cons.date];
+        ((ConsumptionCell*)cell).personLabel.text = @"Person";
+        [((ConsumptionCell*)cell).image setImage:[UIImage imageNamed:@"consumption.png"]];
+        ((ConsumptionCell*)cell).amountLabel.text = [[cons.volume stringValue] stringByAppendingString:@" mL"];
+        ((ConsumptionCell*)cell).resultAmountLabel.text = [[cons.resultAmt stringValue] stringByAppendingString:@" mL"];
+        
+    }
+    
+    if ([[[obj entity]name] isEqualToString:@"Transfer"]){
+        Transfer *trans = (Transfer *)obj;
+        NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+        [formatter setDateFormat:@"M/d/yy 'at' H:mm"];
+        ((ConsumptionCell*)cell).dateLabel.text = [formatter stringFromDate:trans.date];
+        ((ConsumptionCell*)cell).personLabel.text = @"Person";
+        [((ConsumptionCell*)cell).image setImage:[UIImage imageNamed:@"transfer.png"]];
+        ((ConsumptionCell*)cell).amountLabel.text = [[trans.amount stringValue] stringByAppendingString:@" mL"];
     }
     
     return cell;
@@ -171,7 +231,70 @@ authenticatedWithError:(NSError *)error {
 
 -(IBAction)buttonPressed:(id)sender{
     
+    if (sender == self.stepper){
+        NSLog(@"HELLLO!");
+        self.volLabel.text = [NSString stringWithFormat:@"%3.f mL", self.stepper.value];
+    }
+    
+    if (sender == self.transfer){
+        if (self.container == nil) return;
+        
+        
+    }
+    
+    if (sender == self.consume){
+        if (self.container == nil) return;
+        
+        NSLog(@"Creating new consumption...");
+        
+        NSManagedObjectContext *context = self.managedObjectContext;
+        
+        Consumption *newConsumption = [NSEntityDescription insertNewObjectForEntityForName:@"Consumption" inManagedObjectContext:context];
+        
+        newConsumption.date = [NSDate date];
+        newConsumption.volume = [NSNumber numberWithDouble:self.stepper.value];
+        newConsumption.container = self.container;
+        newConsumption.resultAmt = [NSNumber numberWithDouble:[self.container.currentVol doubleValue] - self.stepper.value];
+        
+        [self.container addConsumptionsObject:newConsumption];
+        self.container.currentVol = [NSNumber numberWithDouble:[self.container.currentVol doubleValue] - self.stepper.value];
+        
+        NSError *error = nil;
+        if (![context save:&error]) {
+            // Replace this implementation with code to handle the error appropriately.
+            // abort() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development. 
+            NSLog(@"Unresolved error %@, %@", error, [error userInfo]);
+            abort();
+        }
+        
+        NSLog(@"reloading table...");
+        
+        self.currVolLabel.text = [NSString stringWithFormat:@"%4.f mL", self.container.currentVol];
+        
+        [self.tableView reloadData];
+    }
+    
+    /*if (sender == self.takePicture){
+        UIImagePickerController * imagePicker = [[UIImagePickerController alloc] init];
+        imagePicker.sourceType = UIImagePickerControllerSourceTypeCamera;
+        imagePicker.delegate = self;
+        [self presentModalViewController:imagePicker animated:YES];
+    }*/
 }
+
+- (void)imagePickerControllerDidCancel:(UIImagePickerController *)picker {
+    [self dismissModalViewControllerAnimated:YES];
+}
+
+- (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info {
+    UIImage * newImage = [info objectForKey:UIImagePickerControllerEditedImage];
+    [image setImage:newImage];
+    
+    // You have the image. You can use this to present the image in the next view like you require in `#3`.
+    [self dismissModalViewControllerAnimated:YES];
+}
+
+
 							
 #pragma mark - Split view
 
@@ -188,5 +311,4 @@ authenticatedWithError:(NSError *)error {
     [self.navigationItem setLeftBarButtonItem:nil animated:YES];
     self.masterPopoverController = nil;
 }
-
 @end

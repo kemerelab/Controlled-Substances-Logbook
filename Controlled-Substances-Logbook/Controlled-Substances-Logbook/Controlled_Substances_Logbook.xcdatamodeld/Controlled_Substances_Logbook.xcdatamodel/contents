@@ -4,16 +4,17 @@
         <attribute name="date" optional="YES" attributeType="Date" syncable="YES"/>
         <attribute name="person" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="procedure" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="resultAmt" optional="YES" attributeType="Double" defaultValueString="0.0" syncable="YES"/>
         <attribute name="volume" optional="YES" attributeType="Double" defaultValueString="0.0" syncable="YES"/>
         <relationship name="container" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="Container" syncable="YES"/>
     </entity>
     <entity name="Container" representedClassName="Container" syncable="YES">
-        <attribute name="consVol" optional="YES" attributeType="Double" defaultValueString="0.0" syncable="YES"/>
+        <attribute name="currentVol" optional="YES" attributeType="Double" defaultValueString="0.0" syncable="YES"/>
         <attribute name="expiration" optional="YES" attributeType="Date" syncable="YES"/>
         <attribute name="image" optional="YES" attributeType="Binary" syncable="YES"/>
         <attribute name="initialVol" optional="YES" attributeType="Double" defaultValueString="0.0" syncable="YES"/>
+        <attribute name="lastUse" optional="YES" attributeType="Date" syncable="YES"/>
         <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="transfVol" optional="YES" attributeType="Double" defaultValueString="0.0" syncable="YES"/>
         <relationship name="consumptions" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Consumption" syncable="YES"/>
         <relationship name="substance" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="Substance" inverseName="containers" inverseEntity="Substance" syncable="YES"/>
         <relationship name="transfers" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Transfer" inverseName="destination" inverseEntity="Transfer" syncable="YES"/>
@@ -27,13 +28,14 @@
         <attribute name="date" optional="YES" attributeType="Date" syncable="YES"/>
         <attribute name="person" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="procedure" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="resultAmt" optional="YES" attributeType="Double" defaultValueString="0.0" syncable="YES"/>
         <relationship name="destination" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="Container" inverseName="transfers" inverseEntity="Container" syncable="YES"/>
         <relationship name="origin" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="Container" inverseName="transfers" inverseEntity="Container" syncable="YES"/>
     </entity>
     <elements>
+        <element name="Consumption" positionX="439" positionY="168" width="128" height="120"/>
         <element name="Container" positionX="189" positionY="153" width="128" height="180"/>
         <element name="Substance" positionX="160" positionY="192" width="128" height="120"/>
         <element name="Transfer" positionX="-63" positionY="126" width="128" height="135"/>
-        <element name="Consumption" positionX="439" positionY="168" width="128" height="120"/>
     </elements>
 </model>

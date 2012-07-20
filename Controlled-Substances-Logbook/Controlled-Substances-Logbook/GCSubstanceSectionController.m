@@ -21,7 +21,7 @@
 {
     if ((self = [super initWithViewController:viewcon])) {
         self.substance = subs;
-        NSArray *sortDescriptors = [NSArray arrayWithObject:[NSSortDescriptor sortDescriptorWithKey:@"name" ascending:YES]];
+        NSArray *sortDescriptors = [NSArray arrayWithObject:[NSSortDescriptor sortDescriptorWithKey:@"lastUse" ascending:NO]];
         self.sortedContainers = [subs.containers sortedArrayUsingDescriptors:sortDescriptors];
     }
     return self;
@@ -29,7 +29,7 @@
 
 - (NSArray*)sortedContainers
 {
-    NSArray *sortDescriptors = [NSArray arrayWithObject:[NSSortDescriptor sortDescriptorWithKey:@"name" ascending:YES]];
+    NSArray *sortDescriptors = [NSArray arrayWithObject:[NSSortDescriptor sortDescriptorWithKey:@"lastUse" ascending:NO]];
     return [self.substance.containers sortedArrayUsingDescriptors:sortDescriptors];
 }
 

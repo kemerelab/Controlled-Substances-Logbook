@@ -17,5 +17,6 @@
 @dynamic procedure;
 @dynamic person;
 @dynamic container;
+@dynamic resultAmt;
 
 @end

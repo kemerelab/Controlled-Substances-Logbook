@@ -14,6 +14,7 @@
 @interface Transfer : NSManagedObject
 
 @property (nonatomic, retain) NSNumber * amount;
+@property (nonatomic, retain) NSNumber * resultAmt;
 @property (nonatomic, retain) NSDate * date;
 @property (nonatomic, retain) NSString * procedure;
 @property (nonatomic, retain) NSString * person;

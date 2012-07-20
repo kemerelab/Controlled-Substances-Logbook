@@ -50,6 +50,10 @@
 		C0E2336515B73B1D004F7D03 /* AddNewContainerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = C0E2336315B73B1C004F7D03 /* AddNewContainerViewController.m */; };
 		C0E2336615B73B1D004F7D03 /* AddNewContainerViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = C0E2336415B73B1C004F7D03 /* AddNewContainerViewController.xib */; };
 		C0E2339F15B88E9A004F7D03 /* lab-bottle-write-md.png in Resources */ = {isa = PBXBuildFile; fileRef = C0E2339E15B88E9A004F7D03 /* lab-bottle-write-md.png */; };
+		C0E233B415B9E2D2004F7D03 /* ConsumptionCell.m in Sources */ = {isa = PBXBuildFile; fileRef = C0E233B315B9E2D2004F7D03 /* ConsumptionCell.m */; };
+		C0E233B615B9E304004F7D03 /* ConsumptionCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = C0E233B515B9E304004F7D03 /* ConsumptionCell.xib */; };
+		C0E233B815B9E94D004F7D03 /* transfer.png in Resources */ = {isa = PBXBuildFile; fileRef = C0E233B715B9E94D004F7D03 /* transfer.png */; };
+		C0E233BA15B9E952004F7D03 /* consumption.png in Resources */ = {isa = PBXBuildFile; fileRef = C0E233B915B9E952004F7D03 /* consumption.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -478,6 +482,11 @@
 		C0E2336315B73B1C004F7D03 /* AddNewContainerViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AddNewContainerViewController.m; sourceTree = "<group>"; };
 		C0E2336415B73B1C004F7D03 /* AddNewContainerViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = AddNewContainerViewController.xib; sourceTree = "<group>"; };
 		C0E2339E15B88E9A004F7D03 /* lab-bottle-write-md.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "lab-bottle-write-md.png"; sourceTree = "<group>"; };
+		C0E233B215B9E2D2004F7D03 /* ConsumptionCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ConsumptionCell.h; sourceTree = "<group>"; };
+		C0E233B315B9E2D2004F7D03 /* ConsumptionCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ConsumptionCell.m; sourceTree = "<group>"; };
+		C0E233B515B9E304004F7D03 /* ConsumptionCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ConsumptionCell.xib; sourceTree = "<group>"; };
+		C0E233B715B9E94D004F7D03 /* transfer.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = transfer.png; sourceTree = "<group>"; };
+		C0E233B915B9E952004F7D03 /* consumption.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = consumption.png; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -545,6 +554,8 @@
 		C0E2314215B5C4F7004F7D03 /* Controlled-Substances-Logbook */ = {
 			isa = PBXGroup;
 			children = (
+				C0E233B915B9E952004F7D03 /* consumption.png */,
+				C0E233B715B9E94D004F7D03 /* transfer.png */,
 				C0E2339E15B88E9A004F7D03 /* lab-bottle-write-md.png */,
 				C0E232F115B5DF0D004F7D03 /* Imported */,
 				C0E2319F15B5DA47004F7D03 /* Headers */,
@@ -552,12 +563,13 @@
 				C0E2317B15B5CA00004F7D03 /* gear.png */,
 				C0E2314B15B5C4F7004F7D03 /* AppDelegate.h */,
 				C0E2314C15B5C4F7004F7D03 /* AppDelegate.m */,
-				C0E2315115B5C4F7004F7D03 /* MasterViewController.h */,
-				C0E2315215B5C4F7004F7D03 /* MasterViewController.m */,
 				C0E2336215B73B1C004F7D03 /* AddNewContainerViewController.h */,
 				C0E2336315B73B1C004F7D03 /* AddNewContainerViewController.m */,
+				C0E2315115B5C4F7004F7D03 /* MasterViewController.h */,
+				C0E2315215B5C4F7004F7D03 /* MasterViewController.m */,
 				C0E2315415B5C4F7004F7D03 /* DetailViewController.h */,
 				C0E2315515B5C4F7004F7D03 /* DetailViewController.m */,
+				C0E233B115B9E0D7004F7D03 /* Custom Cells */,
 				C0E2339D15B88E10004F7D03 /* XIBs */,
 				C0E2314E15B5C4F7004F7D03 /* Controlled_Substances_Logbook.xcdatamodeld */,
 				C0E2335415B723B7004F7D03 /* DataModel */,
@@ -989,6 +1001,16 @@
 			name = XIBs;
 			sourceTree = "<group>";
 		};
+		C0E233B115B9E0D7004F7D03 /* Custom Cells */ = {
+			isa = PBXGroup;
+			children = (
+				C0E233B215B9E2D2004F7D03 /* ConsumptionCell.h */,
+				C0E233B315B9E2D2004F7D03 /* ConsumptionCell.m */,
+				C0E233B515B9E304004F7D03 /* ConsumptionCell.xib */,
+			);
+			name = "Custom Cells";
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -1118,6 +1140,9 @@
 				C0E2334915B7173E004F7D03 /* UpAccessoryWhite@2x.png in Resources */,
 				C0E2336615B73B1D004F7D03 /* AddNewContainerViewController.xib in Resources */,
 				C0E2339F15B88E9A004F7D03 /* lab-bottle-write-md.png in Resources */,
+				C0E233B615B9E304004F7D03 /* ConsumptionCell.xib in Resources */,
+				C0E233B815B9E94D004F7D03 /* transfer.png in Resources */,
+				C0E233BA15B9E952004F7D03 /* consumption.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1166,6 +1191,7 @@
 				C0E2335A15B72426004F7D03 /* Consumption.m in Sources */,
 				C0E2335D15B72436004F7D03 /* Transfer.m in Sources */,
 				C0E2336515B73B1D004F7D03 /* AddNewContainerViewController.m in Sources */,
+				C0E233B415B9E2D2004F7D03 /* ConsumptionCell.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

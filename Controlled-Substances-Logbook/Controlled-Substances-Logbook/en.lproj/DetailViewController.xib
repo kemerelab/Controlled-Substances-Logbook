@@ -195,7 +195,6 @@
 						<int key="NSvFlags">274</int>
 						<string key="NSFrame">{{0, 552}, {768, 452}}</string>
 						<reference key="NSSuperview" ref="647120888"/>
-						<reference key="NSNextKeyView"/>
 						<string key="NSReuseIdentifierKey">_NS:9</string>
 						<reference key="IBUIBackgroundColor" ref="33107367"/>
 						<bool key="IBUIClipsSubviews">YES</bool>
@@ -308,7 +307,6 @@
 						<int key="NSvFlags">292</int>
 						<string key="NSFrame">{{292, 131}, {154, 21}}</string>
 						<reference key="NSSuperview" ref="647120888"/>
-						<reference key="NSNextKeyView"/>
 						<string key="NSReuseIdentifierKey">_NS:9</string>
 						<bool key="IBUIOpaque">NO</bool>
 						<bool key="IBUIClipsSubviews">YES</bool>
@@ -406,14 +404,6 @@
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBCocoaTouchOutletConnection" key="connection">
-						<string key="label">initVolLabel</string>
-						<reference key="source" ref="841351856"/>
-						<reference key="destination" ref="97130835"/>
-					</object>
-					<int key="connectionID">86</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBCocoaTouchOutletConnection" key="connection">
 						<string key="label">consume</string>
 						<reference key="source" ref="841351856"/>
 						<reference key="destination" ref="1027586043"/>
@@ -461,6 +451,30 @@
 					<int key="connectionID">98</int>
 				</object>
 				<object class="IBConnectionRecord">
+					<object class="IBCocoaTouchOutletConnection" key="connection">
+						<string key="label">stepper</string>
+						<reference key="source" ref="841351856"/>
+						<reference key="destination" ref="19640807"/>
+					</object>
+					<int key="connectionID">101</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBCocoaTouchOutletConnection" key="connection">
+						<string key="label">initialVolLabel</string>
+						<reference key="source" ref="841351856"/>
+						<reference key="destination" ref="97130835"/>
+					</object>
+					<int key="connectionID">102</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBCocoaTouchOutletConnection" key="connection">
+						<string key="label">tableView</string>
+						<reference key="source" ref="841351856"/>
+						<reference key="destination" ref="116140730"/>
+					</object>
+					<int key="connectionID">104</int>
+				</object>
+				<object class="IBConnectionRecord">
 					<object class="IBCocoaTouchEventConnection" key="connection">
 						<string key="label">buttonPressed:</string>
 						<reference key="source" ref="600670695"/>
@@ -468,6 +482,31 @@
 						<int key="IBEventType">7</int>
 					</object>
 					<int key="connectionID">94</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBCocoaTouchOutletConnection" key="connection">
+						<string key="label">dataSource</string>
+						<reference key="source" ref="116140730"/>
+						<reference key="destination" ref="841351856"/>
+					</object>
+					<int key="connectionID">105</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBCocoaTouchOutletConnection" key="connection">
+						<string key="label">delegate</string>
+						<reference key="source" ref="116140730"/>
+						<reference key="destination" ref="841351856"/>
+					</object>
+					<int key="connectionID">106</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBCocoaTouchEventConnection" key="connection">
+						<string key="label">buttonPressed:</string>
+						<reference key="source" ref="19640807"/>
+						<reference key="destination" ref="841351856"/>
+						<int key="IBEventType">13</int>
+					</object>
+					<int key="connectionID">100</int>
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBCocoaTouchEventConnection" key="connection">
@@ -515,7 +554,6 @@
 							<reference ref="483876647"/>
 							<reference ref="600670695"/>
 							<reference ref="991802818"/>
-							<reference ref="116140730"/>
 							<reference ref="636961702"/>
 							<reference ref="540853630"/>
 							<reference ref="1027586043"/>
@@ -526,6 +564,7 @@
 							<reference ref="104897003"/>
 							<reference ref="1051956923"/>
 							<reference ref="97130835"/>
+							<reference ref="116140730"/>
 						</array>
 						<reference key="parent" ref="0"/>
 					</object>
@@ -632,7 +671,7 @@
 			<nil key="activeLocalization"/>
 			<dictionary class="NSMutableDictionary" key="localizations"/>
 			<nil key="sourceID"/>
-			<int key="maxID">98</int>
+			<int key="maxID">106</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes"/>
 		<int key="IBDocument.localizationMode">0</int>

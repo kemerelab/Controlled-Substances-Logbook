@@ -73,6 +73,9 @@
     if (self.pop == nil) {
         self.pop = [[UIPopoverController alloc] initWithContentViewController:newcon];
     }
+    else {
+        self.pop.contentViewController = newcon;
+    }
     if ([self.pop isPopoverVisible]) [self.pop dismissPopoverAnimated:YES];
     else [self.pop presentPopoverFromBarButtonItem:self.navigationItem.rightBarButtonItem permittedArrowDirections:UIPopoverArrowDirectionUp animated:YES];
 }
@@ -91,7 +94,9 @@
         Container *newContainer = [NSEntityDescription insertNewObjectForEntityForName:@"Container" inManagedObjectContext:context];
         newContainer.name = name;
         newContainer.initialVol = [NSNumber numberWithDouble:vol];
+        newContainer.currentVol = [NSNumber numberWithDouble:vol];
         newContainer.substance = newSubstance;
+        newContainer.lastUse = [NSDate date];
         
         [newSubstance addContainersObject:newContainer];
         
@@ -108,7 +113,9 @@
         Container *newContainer = [NSEntityDescription insertNewObjectForEntityForName:@"Container" inManagedObjectContext:context];
         newContainer.name = name;
         newContainer.initialVol = [NSNumber numberWithDouble:vol];
+        newContainer.currentVol = [NSNumber numberWithDouble:vol];
         newContainer.substance = s;
+        newContainer.lastUse = [NSDate date];
         
         [s addContainersObject:newContainer];
         
