@@ -156,6 +156,8 @@ authenticatedWithError:(NSError *)error {
     
     container = givenContainer;
     
+    if (self.transactions) ;
+    
     [self.tableView reloadData];
 }
 
@@ -216,9 +218,12 @@ authenticatedWithError:(NSError *)error {
         NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
         [formatter setDateFormat:@"M/d/yy 'at' H:mm"];
         ((ConsumptionCell*)cell).dateLabel.text = [formatter stringFromDate:trans.date];
-        ((ConsumptionCell*)cell).personLabel.text = @"Person";
+        ((ConsumptionCell*)cell).personLabel.text = trans.person;
+        ((ConsumptionCell*)cell).procedureLabel.text = trans.procedure;
+        ((ConsumptionCell*)cell).destinationLabel.text = @"";
         [((ConsumptionCell*)cell).image setImage:[UIImage imageNamed:@"transfer.png"]];
         ((ConsumptionCell*)cell).amountLabel.text = [[trans.amount stringValue] stringByAppendingString:@" mL"];
+        ((ConsumptionCell*)cell).resultAmountLabel.text = [[trans.resultAmt stringValue] stringByAppendingString:@" mL"];
     }
     
     return cell;
@@ -239,7 +244,40 @@ authenticatedWithError:(NSError *)error {
     if (sender == self.transfer){
         if (self.container == nil) return;
         
+        NSLog(@"Creating new transfer...");
         
+        NSManagedObjectContext *context = self.managedObjectContext;
+        
+        // Going to default new container name for now
+        
+        Container* newContainer = [self.masterViewController addContainerWithSubstance:self.container.substance orNewSubstance:nil initialVol:self.stepper.value name:@"Transfer Container"];
+        
+        Transfer *newTransfer = [NSEntityDescription insertNewObjectForEntityForName:@"Transfer" inManagedObjectContext:context];
+        
+        newTransfer.date = [NSDate date];
+        newTransfer.amount = [NSNumber numberWithDouble:self.stepper.value];
+        newTransfer.person = @"Transfer Student"; // lol i'm so funny
+        newTransfer.procedure = @"Transfer Procedure";
+        newTransfer.resultAmt = [NSNumber numberWithDouble:[self.container.currentVol doubleValue] - self.stepper.value];
+        newTransfer.origin =  self.container;
+        newTransfer.destination = newContainer;
+        
+        [self.container addTransfersObject:newTransfer];
+        self.container.currentVol = [NSNumber numberWithDouble:[self.container.currentVol doubleValue] - self.stepper.value];
+
+        NSError *error = nil;
+        if (![context save:&error]) {
+            // Replace this implementation with code to handle the error appropriately.
+            // abort() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development. 
+            NSLog(@"Unresolved error %@, %@", error, [error userInfo]);
+            abort();
+        }
+        
+        NSLog(@"reloading table...");
+        
+        self.currVolLabel.text = [NSString stringWithFormat:@"%4.f mL", self.container.currentVol];
+        
+        [self.tableView reloadData];
     }
     
     if (sender == self.consume){

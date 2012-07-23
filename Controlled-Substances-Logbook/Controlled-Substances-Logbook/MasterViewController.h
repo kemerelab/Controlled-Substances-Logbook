@@ -28,6 +28,6 @@
 
 @property (nonatomic, retain) UIPopoverController *pop;
 
-- (void) addContainerWithSubstance:(Substance*)s orNewSubstance:(NSString*)new initialVol:(double)vol name:(NSString*)name;
+- (Container*) addContainerWithSubstance:(Substance*)s orNewSubstance:(NSString*)new initialVol:(double)vol name:(NSString*)name;
 
 @end

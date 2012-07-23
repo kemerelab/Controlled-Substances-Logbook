@@ -80,7 +80,7 @@
     else [self.pop presentPopoverFromBarButtonItem:self.navigationItem.rightBarButtonItem permittedArrowDirections:UIPopoverArrowDirectionUp animated:YES];
 }
 
-- (void)addContainerWithSubstance:(Substance*)s orNewSubstance:(NSString*)new initialVol:(double)vol name:(NSString*)name
+- (Container *)addContainerWithSubstance:(Substance*)s orNewSubstance:(NSString*)new initialVol:(double)vol name:(NSString*)name
 {
     [self.pop dismissPopoverAnimated:YES];
     NSManagedObjectContext *context = [self.fetchedResultsController managedObjectContext];
@@ -107,6 +107,8 @@
             NSLog(@"Unresolved error %@, %@", error, [error userInfo]);
             abort();
         }
+        
+        return newContainer;
     } else {
         
         NSLog(@"Creating new container...");
@@ -127,6 +129,8 @@
             NSLog(@"Unresolved error %@, %@", error, [error userInfo]);
             abort();
         }
+        
+        return newContainer;
     }
 }
 
