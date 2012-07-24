@@ -34,6 +34,8 @@
 
 @property (nonatomic, retain) IBOutlet UIStepper *stepper;
 
+@property (nonatomic, retain) IBOutlet UISegmentedControl *segcontrol;
+
 @property (nonatomic, retain) Container* container;
 
 @property (nonatomic, retain) IBOutlet UITableView *tableView;

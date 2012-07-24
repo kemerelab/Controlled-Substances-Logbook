@@ -23,7 +23,7 @@
 @synthesize managedObjectContext, transactions;
 @synthesize transfer, consume, takePicture;
 @synthesize nameLabel, currVolLabel, initialVolLabel, expirLabel, volLabel;
-@synthesize image, stepper;
+@synthesize image, stepper, segcontrol;
 @synthesize container;
 @synthesize service;
 @synthesize detailItem = _detailItem;
@@ -68,10 +68,6 @@
     [settingsButton setShowsTouchWhenHighlighted:YES];
     UIBarButtonItem *settingButtonItem =[[UIBarButtonItem alloc] initWithCustomView:settingsButton];
     self.navigationItem.rightBarButtonItem = settingButtonItem;
-    
-    self.stepper.minimumValue = 0;
-    self.stepper.maximumValue = 10;
-    self.stepper.value = 0;
     
 }
 
@@ -151,12 +147,14 @@ authenticatedWithError:(NSError *)error {
 {
     NSLog(@"Setting...");
     self.nameLabel.text = givenContainer.name;
-    self.initialVolLabel.text = [NSString stringWithFormat:@"%4.f mL", [givenContainer.initialVol doubleValue]];
-    self.currVolLabel.text = [NSString stringWithFormat:@"%4.f mL", [givenContainer.currentVol doubleValue]];
+    self.initialVolLabel.text = [NSString stringWithFormat:@"%4.2f mL", [givenContainer.initialVol doubleValue]];
+    self.currVolLabel.text = [NSString stringWithFormat:@"%4.2f mL", [givenContainer.currentVol doubleValue]];
     
     container = givenContainer;
+    self.volLabel.text = @"0 mL";
     
     if (self.transactions) ;
+    
     
     [self.tableView reloadData];
 }
@@ -238,7 +236,12 @@ authenticatedWithError:(NSError *)error {
     
     if (sender == self.stepper){
         NSLog(@"HELLLO!");
-        self.volLabel.text = [NSString stringWithFormat:@"%3.f mL", self.stepper.value];
+        double oldValue = [[self.volLabel.text stringByReplacingOccurrencesOfString:@" mL" withString:@""] doubleValue];
+        self.volLabel.text = [NSString stringWithFormat:@"%3.2f mL", oldValue + [[self.segcontrol titleForSegmentAtIndex:self.segcontrol.selectedSegmentIndex] doubleValue]];
+    }
+    
+    if (sender == self.segcontrol){
+        NSLog(@"HOLA %@", [self.segcontrol titleForSegmentAtIndex:self.segcontrol.selectedSegmentIndex]);
     }
     
     if (sender == self.transfer){
@@ -255,15 +258,16 @@ authenticatedWithError:(NSError *)error {
         Transfer *newTransfer = [NSEntityDescription insertNewObjectForEntityForName:@"Transfer" inManagedObjectContext:context];
         
         newTransfer.date = [NSDate date];
-        newTransfer.amount = [NSNumber numberWithDouble:self.stepper.value];
+        double newAmt = [[self.volLabel.text stringByReplacingOccurrencesOfString:@" mL" withString:@""] doubleValue];
+        newTransfer.amount = [NSNumber numberWithDouble:newAmt];
         newTransfer.person = @"Transfer Student"; // lol i'm so funny
         newTransfer.procedure = @"Transfer Procedure";
-        newTransfer.resultAmt = [NSNumber numberWithDouble:[self.container.currentVol doubleValue] - self.stepper.value];
+        newTransfer.resultAmt = [NSNumber numberWithDouble:[self.container.currentVol doubleValue] - newAmt];
         newTransfer.origin =  self.container;
         newTransfer.destination = newContainer;
         
         [self.container addTransfersObject:newTransfer];
-        self.container.currentVol = [NSNumber numberWithDouble:[self.container.currentVol doubleValue] - self.stepper.value];
+        self.container.currentVol = [NSNumber numberWithDouble:[self.container.currentVol doubleValue] - newAmt];
 
         NSError *error = nil;
         if (![context save:&error]) {
@@ -275,7 +279,7 @@ authenticatedWithError:(NSError *)error {
         
         NSLog(@"reloading table...");
         
-        self.currVolLabel.text = [NSString stringWithFormat:@"%4.f mL", self.container.currentVol];
+        self.currVolLabel.text = [NSString stringWithFormat:@"%4.2f mL", [self.container.currentVol doubleValue]];
         
         [self.tableView reloadData];
     }
@@ -290,12 +294,13 @@ authenticatedWithError:(NSError *)error {
         Consumption *newConsumption = [NSEntityDescription insertNewObjectForEntityForName:@"Consumption" inManagedObjectContext:context];
         
         newConsumption.date = [NSDate date];
-        newConsumption.volume = [NSNumber numberWithDouble:self.stepper.value];
+        double newAmt = [[self.volLabel.text stringByReplacingOccurrencesOfString:@" mL" withString:@""] doubleValue];
+        newConsumption.volume = [NSNumber numberWithDouble:newAmt];
         newConsumption.container = self.container;
-        newConsumption.resultAmt = [NSNumber numberWithDouble:[self.container.currentVol doubleValue] - self.stepper.value];
+        newConsumption.resultAmt = [NSNumber numberWithDouble:[self.container.currentVol doubleValue] - newAmt];
         
         [self.container addConsumptionsObject:newConsumption];
-        self.container.currentVol = [NSNumber numberWithDouble:[self.container.currentVol doubleValue] - self.stepper.value];
+        self.container.currentVol = [NSNumber numberWithDouble:[self.container.currentVol doubleValue] - newAmt];
         
         NSError *error = nil;
         if (![context save:&error]) {
@@ -307,7 +312,7 @@ authenticatedWithError:(NSError *)error {
         
         NSLog(@"reloading table...");
         
-        self.currVolLabel.text = [NSString stringWithFormat:@"%4.f mL", self.container.currentVol];
+        self.currVolLabel.text = [NSString stringWithFormat:@"%4.2f mL", [self.container.currentVol doubleValue]];
         
         [self.tableView reloadData];
     }
