@@ -17,6 +17,7 @@
 @property (nonatomic, retain) NSNumber * resultAmt;
 @property (nonatomic, retain) NSDate * date;
 @property (nonatomic, retain) NSString * procedure;
+@property (nonatomic, retain) NSString * animal;
 @property (nonatomic, retain) NSString * person;
 @property (nonatomic, retain) Container *container;
 

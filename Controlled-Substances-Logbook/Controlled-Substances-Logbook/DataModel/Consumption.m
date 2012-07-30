@@ -18,5 +18,6 @@
 @dynamic person;
 @dynamic container;
 @dynamic resultAmt;
+@dynamic animal;
 
 @end

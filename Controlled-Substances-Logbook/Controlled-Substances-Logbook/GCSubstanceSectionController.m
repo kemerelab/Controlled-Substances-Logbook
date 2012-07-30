@@ -50,12 +50,25 @@
 
 - (UITableViewCell*)contentCellForRow:(NSUInteger)row
 {
-    UITableViewCell* ret = [super contentCellForRow:row];
+    //UITableViewCell* ret = [super contentCellForRow:row];
+    NSString* contentCellIdentifier = [NSStringFromClass([self class]) stringByAppendingString:@"content"];
+	
+	UITableViewCell *ret = [self.tableView dequeueReusableCellWithIdentifier:contentCellIdentifier];
+	if (ret == nil) {
+    
+        ret = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:contentCellIdentifier];
+    }
+    
     ret.accessoryType = UITableViewCellAccessoryNone;
     UIColor* aliceBlue = [UIColor colorWithRed:176.0/255 green:226.0/255 blue:255.0/255 alpha:0.5];
     ret.contentView.backgroundColor = aliceBlue;
     ret.textLabel.backgroundColor = [UIColor clearColor];
     
+    Container *c = [self.sortedContainers objectAtIndex:row];
+    
+    ret.textLabel.text = [@"     " stringByAppendingString:c.name];
+    ret.detailTextLabel.backgroundColor = [UIColor clearColor];
+    ret.detailTextLabel.text = [NSString stringWithFormat:@"%4.2f mL", [c.currentVol doubleValue]];
     return ret;
 }
 

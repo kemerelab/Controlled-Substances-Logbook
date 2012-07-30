@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <model name="" userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="872" systemVersion="10K549" minimumToolsVersion="Automatic" macOSVersion="Automatic" iOSVersion="Automatic">
     <entity name="Consumption" representedClassName="Consumption" syncable="YES">
+        <attribute name="animal" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="date" optional="YES" attributeType="Date" syncable="YES"/>
         <attribute name="person" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="procedure" optional="YES" attributeType="String" syncable="YES"/>
@@ -33,7 +34,7 @@
         <relationship name="origin" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="Container" inverseName="transfers" inverseEntity="Container" syncable="YES"/>
     </entity>
     <elements>
-        <element name="Consumption" positionX="439" positionY="168" width="128" height="120"/>
+        <element name="Consumption" positionX="439" positionY="168" width="128" height="150"/>
         <element name="Container" positionX="189" positionY="153" width="128" height="180"/>
         <element name="Substance" positionX="160" positionY="192" width="128" height="120"/>
         <element name="Transfer" positionX="-63" positionY="126" width="128" height="150"/>

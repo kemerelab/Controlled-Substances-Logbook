@@ -30,7 +30,7 @@
 
 @property (nonatomic, retain) IBOutlet UIImageView *image;
 
-@property (nonatomic, retain) IBOutlet UIButton *transfer, *consume, *takePicture;
+@property (nonatomic, retain) IBOutlet UIButton *transfer, *consume, *takePicture, *deleteButton;
 
 @property (nonatomic, retain) IBOutlet UIStepper *stepper;
 

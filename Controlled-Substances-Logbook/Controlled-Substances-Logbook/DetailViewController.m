@@ -21,7 +21,7 @@
 
 @synthesize tableView, masterViewController;
 @synthesize managedObjectContext, transactions;
-@synthesize transfer, consume, takePicture;
+@synthesize transfer, consume, takePicture, deleteButton;
 @synthesize nameLabel, currVolLabel, initialVolLabel, expirLabel, volLabel;
 @synthesize image, stepper, segcontrol;
 @synthesize container;
@@ -82,19 +82,100 @@
 
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
 {
-    if (self.service == nil){
+    if ([alertView.title isEqualToString:@"New Container"]){
         
-        NSString* username = [[alertView textFieldAtIndex:0] text];
-        NSString* password = [[alertView textFieldAtIndex:1] text];
         
-        self.service = [[GDataServiceGoogleSpreadsheet alloc] init];
-        [self.service setShouldCacheResponseData:YES];
-        [self.service setUserCredentialsWithUsername:username password:password];
+        NSManagedObjectContext *context = self.managedObjectContext;
         
-        MBProgressHUD* hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
-        hud.labelText = @"Logging in...";
-        [self.service authenticateWithDelegate:self didAuthenticateSelector:@selector(ticket:authenticatedWithError:)];
+        // Going to default new container name for now
         
+        double newAmt = [[self.volLabel.text stringByReplacingOccurrencesOfString:@" mL" withString:@""] doubleValue];
+        
+        Container* newContainer = [self.masterViewController addContainerWithSubstance:self.container.substance orNewSubstance:nil initialVol:newAmt name:[[alertView textFieldAtIndex:0] text]];
+        
+        Transfer *newTransfer = [NSEntityDescription insertNewObjectForEntityForName:@"Transfer" inManagedObjectContext:context];
+        
+        newTransfer.date = [NSDate date];
+        
+        newTransfer.amount = [NSNumber numberWithDouble:newAmt];
+        newTransfer.person = @"Transfer Student"; // lol i'm so funny
+        newTransfer.procedure = @"N/A";
+        newTransfer.resultAmt = [NSNumber numberWithDouble:[self.container.currentVol doubleValue] - newAmt];
+        newTransfer.origin =  self.container;
+        newTransfer.destination = newContainer;
+        
+        [self.container addTransfersObject:newTransfer];
+        self.container.currentVol = [NSNumber numberWithDouble:[self.container.currentVol doubleValue] - newAmt];
+        
+        NSError *error = nil;
+        if (![context save:&error]) {
+            // Replace this implementation with code to handle the error appropriately.
+            // abort() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development. 
+            NSLog(@"Unresolved error %@, %@", error, [error userInfo]);
+            abort();
+        }
+        
+        NSLog(@"reloading table...");
+        
+        self.currVolLabel.text = [NSString stringWithFormat:@"%4.2f mL", [self.container.currentVol doubleValue]];
+        
+        [self.tableView reloadData];
+        
+        return;
+        
+    }
+    
+    if ([alertView.title isEqualToString:@"Consumption"]){
+        
+        NSLog(@"Creating new consumption...");
+        
+        NSManagedObjectContext *context = self.managedObjectContext;
+        
+        Consumption *newConsumption = [NSEntityDescription insertNewObjectForEntityForName:@"Consumption" inManagedObjectContext:context];
+        
+        newConsumption.date = [NSDate date];
+        double newAmt = [[self.volLabel.text stringByReplacingOccurrencesOfString:@" mL" withString:@""] doubleValue];
+        newConsumption.volume = [NSNumber numberWithDouble:newAmt];
+        newConsumption.container = self.container;
+        newConsumption.resultAmt = [NSNumber numberWithDouble:[self.container.currentVol doubleValue] - newAmt];
+        newConsumption.procedure = [alertView textFieldAtIndex:0].text;
+        newConsumption.animal = [alertView textFieldAtIndex:1].text;
+        
+        [self.container addConsumptionsObject:newConsumption];
+        self.container.currentVol = [NSNumber numberWithDouble:[self.container.currentVol doubleValue] - newAmt];
+        
+        NSError *error = nil;
+        if (![context save:&error]) {
+            // Replace this implementation with code to handle the error appropriately.
+            // abort() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development. 
+            NSLog(@"Unresolved error %@, %@", error, [error userInfo]);
+            abort();
+        }
+        
+        NSLog(@"reloading table...");
+        
+        self.currVolLabel.text = [NSString stringWithFormat:@"%4.2f mL", [self.container.currentVol doubleValue]];
+        
+        [self.tableView reloadData];
+        
+        return;
+    }
+    
+    else {
+        if (self.service == nil){
+            
+            NSString* username = [[alertView textFieldAtIndex:0] text];
+            NSString* password = [[alertView textFieldAtIndex:1] text];
+            
+            self.service = [[GDataServiceGoogleSpreadsheet alloc] init];
+            [self.service setShouldCacheResponseData:YES];
+            [self.service setUserCredentialsWithUsername:username password:password];
+            
+            MBProgressHUD* hud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+            hud.labelText = @"Logging in...";
+            [self.service authenticateWithDelegate:self didAuthenticateSelector:@selector(ticket:authenticatedWithError:)];
+            
+        }
     }
 }
                                                                                     
@@ -145,6 +226,21 @@ authenticatedWithError:(NSError *)error {
 
 - (void) setContainer:(Container *)givenContainer
 {
+    
+    if (givenContainer == nil){
+        
+        self.nameLabel.text = @"Select a container.";
+        self.initialVolLabel.text = @"--";
+        self.currVolLabel.text = @"--";
+        
+        container = nil;
+        self.volLabel.text = @"--";
+        self.transactions = nil;
+        
+        [self.tableView reloadData];
+        
+    }
+    
     NSLog(@"Setting...");
     self.nameLabel.text = givenContainer.name;
     self.initialVolLabel.text = [NSString stringWithFormat:@"%4.2f mL", [givenContainer.initialVol doubleValue]];
@@ -153,8 +249,7 @@ authenticatedWithError:(NSError *)error {
     container = givenContainer;
     self.volLabel.text = @"0 mL";
     
-    if (self.transactions) ;
-    
+    NSLog(@"%@", self.transactions);
     
     [self.tableView reloadData];
 }
@@ -163,14 +258,18 @@ authenticatedWithError:(NSError *)error {
 {
     
     NSLog(@"getting transactions...");
-    NSLog(@"consumptions - %@ : transfers - %@", self.container.consumptions, self.container.transfers);
+    //NSLog(@"consumptions - %@ : transfers - %@", self.container.consumptions, self.container.transfers);
     NSArray *sortDescriptors = [NSArray arrayWithObject:[NSSortDescriptor sortDescriptorWithKey:@"date" ascending:NO]];
     
-    NSSet *trans = [self.container.consumptions setByAddingObjectsFromSet:self.container.transfers];
+    NSSet* trans = [NSSet set];
+    
+    trans = [trans setByAddingObjectsFromSet:self.container.consumptions];
+    
+    trans = [trans setByAddingObjectsFromSet:self.container.transfers];
     
     transactions = [trans sortedArrayUsingDescriptors:sortDescriptors];
 
-    NSLog(@"%@", transactions);
+    //NSLog(@"%@", transactions);
 
     return transactions;
     
@@ -205,9 +304,12 @@ authenticatedWithError:(NSError *)error {
         [formatter setDateFormat:@"M/d/yy 'at' H:mm"];
         ((ConsumptionCell*)cell).dateLabel.text = [formatter stringFromDate:cons.date];
         ((ConsumptionCell*)cell).personLabel.text = @"Person";
+        ((ConsumptionCell*)cell).procedureLabel.text = cons.procedure;
+        ((ConsumptionCell*)cell).destinationLabel.text = cons.animal;
         [((ConsumptionCell*)cell).image setImage:[UIImage imageNamed:@"consumption.png"]];
-        ((ConsumptionCell*)cell).amountLabel.text = [[cons.volume stringValue] stringByAppendingString:@" mL"];
-        ((ConsumptionCell*)cell).resultAmountLabel.text = [[cons.resultAmt stringValue] stringByAppendingString:@" mL"];
+        ((ConsumptionCell*)cell).amountLabel.text = [NSString stringWithFormat:@"%4.2f mL",[cons.volume doubleValue]];
+
+        ((ConsumptionCell*)cell).resultAmountLabel.text = [NSString stringWithFormat:@"%4.2f mL",[cons.resultAmt doubleValue]];
         
     }
     
@@ -217,11 +319,11 @@ authenticatedWithError:(NSError *)error {
         [formatter setDateFormat:@"M/d/yy 'at' H:mm"];
         ((ConsumptionCell*)cell).dateLabel.text = [formatter stringFromDate:trans.date];
         ((ConsumptionCell*)cell).personLabel.text = trans.person;
-        ((ConsumptionCell*)cell).procedureLabel.text = trans.procedure;
-        ((ConsumptionCell*)cell).destinationLabel.text = @"";
+        ((ConsumptionCell*)cell).procedureLabel.text = @"N/A";
+        ((ConsumptionCell*)cell).destinationLabel.text = trans.destination.name;
         [((ConsumptionCell*)cell).image setImage:[UIImage imageNamed:@"transfer.png"]];
-        ((ConsumptionCell*)cell).amountLabel.text = [[trans.amount stringValue] stringByAppendingString:@" mL"];
-        ((ConsumptionCell*)cell).resultAmountLabel.text = [[trans.resultAmt stringValue] stringByAppendingString:@" mL"];
+        ((ConsumptionCell*)cell).amountLabel.text = [NSString stringWithFormat:@"%4.2f mL",[trans.amount doubleValue]];
+        ((ConsumptionCell*)cell).resultAmountLabel.text = [NSString stringWithFormat:@"%4.2f mL",[trans.resultAmt doubleValue]];
     }
     
     return cell;
@@ -235,7 +337,7 @@ authenticatedWithError:(NSError *)error {
 -(IBAction)buttonPressed:(id)sender{
     
     if (sender == self.stepper){
-        NSLog(@"HELLLO!");
+        //NSLog(@"HELLLO!");
         double oldValue = [[self.volLabel.text stringByReplacingOccurrencesOfString:@" mL" withString:@""] doubleValue];
         self.volLabel.text = [NSString stringWithFormat:@"%3.2f mL", oldValue + [[self.segcontrol titleForSegmentAtIndex:self.segcontrol.selectedSegmentIndex] doubleValue]];
     }
@@ -244,77 +346,65 @@ authenticatedWithError:(NSError *)error {
         NSLog(@"HOLA %@", [self.segcontrol titleForSegmentAtIndex:self.segcontrol.selectedSegmentIndex]);
     }
     
+    if (sender == self.deleteButton){
+        
+        NSLog(@"Going to delete container %@", self.container.name);
+        
+        if ([self.transactions count] > 0) {
+            UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Delete Error" message:@"ERROR: Cannot delete this contianer because it has existing transactions." delegate:nil cancelButtonTitle:@"OK" otherButtonTitles:nil];
+            [alertView show];
+            
+            return;
+        }
+        
+        Substance *storedSubstance = self.container.substance;
+        
+        NSManagedObjectContext *context = self.managedObjectContext;
+        
+        [context deleteObject:self.container];
+        
+        if ([storedSubstance.containers count] == 1) {
+            
+            [context deleteObject:storedSubstance];
+        }
+        
+        NSError *error = nil;
+        if (![context save:&error]) {
+            // Replace this implementation with code to handle the error appropriately.
+            // abort() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development. 
+            NSLog(@"Unresolved error %@, %@", error, [error userInfo]);
+            abort();
+        }
+        
+        self.container = nil;
+        
+    }
+    
     if (sender == self.transfer){
         if (self.container == nil) return;
         
         NSLog(@"Creating new transfer...");
         
-        NSManagedObjectContext *context = self.managedObjectContext;
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"New Container" message:@"Please type a name for your new container below." delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"Create", nil];
         
-        // Going to default new container name for now
+        alert.alertViewStyle = UIAlertViewStylePlainTextInput;
+        [alert textFieldAtIndex:0].placeholder = @"e.x. Container A-1-a";
         
-        Container* newContainer = [self.masterViewController addContainerWithSubstance:self.container.substance orNewSubstance:nil initialVol:self.stepper.value name:@"Transfer Container"];
+        [alert show];
         
-        Transfer *newTransfer = [NSEntityDescription insertNewObjectForEntityForName:@"Transfer" inManagedObjectContext:context];
-        
-        newTransfer.date = [NSDate date];
-        double newAmt = [[self.volLabel.text stringByReplacingOccurrencesOfString:@" mL" withString:@""] doubleValue];
-        newTransfer.amount = [NSNumber numberWithDouble:newAmt];
-        newTransfer.person = @"Transfer Student"; // lol i'm so funny
-        newTransfer.procedure = @"Transfer Procedure";
-        newTransfer.resultAmt = [NSNumber numberWithDouble:[self.container.currentVol doubleValue] - newAmt];
-        newTransfer.origin =  self.container;
-        newTransfer.destination = newContainer;
-        
-        [self.container addTransfersObject:newTransfer];
-        self.container.currentVol = [NSNumber numberWithDouble:[self.container.currentVol doubleValue] - newAmt];
-
-        NSError *error = nil;
-        if (![context save:&error]) {
-            // Replace this implementation with code to handle the error appropriately.
-            // abort() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development. 
-            NSLog(@"Unresolved error %@, %@", error, [error userInfo]);
-            abort();
-        }
-        
-        NSLog(@"reloading table...");
-        
-        self.currVolLabel.text = [NSString stringWithFormat:@"%4.2f mL", [self.container.currentVol doubleValue]];
-        
-        [self.tableView reloadData];
     }
     
     if (sender == self.consume){
         if (self.container == nil) return;
         
-        NSLog(@"Creating new consumption...");
+        UIAlertView *consumeMessage = [[UIAlertView alloc] initWithTitle:@"Consumption" message:@"Type in procedure and destination animal below." delegate:self cancelButtonTitle:@"Cancel" otherButtonTitles:@"OK", nil];
+        consumeMessage.alertViewStyle = UIAlertViewStyleLoginAndPasswordInput;
+        [consumeMessage textFieldAtIndex:0].placeholder = @"Procedure";
+        [consumeMessage textFieldAtIndex:1].secureTextEntry = NO;
+        [consumeMessage textFieldAtIndex:1].placeholder = @"Destination Animal";
         
-        NSManagedObjectContext *context = self.managedObjectContext;
+        [consumeMessage show];
         
-        Consumption *newConsumption = [NSEntityDescription insertNewObjectForEntityForName:@"Consumption" inManagedObjectContext:context];
-        
-        newConsumption.date = [NSDate date];
-        double newAmt = [[self.volLabel.text stringByReplacingOccurrencesOfString:@" mL" withString:@""] doubleValue];
-        newConsumption.volume = [NSNumber numberWithDouble:newAmt];
-        newConsumption.container = self.container;
-        newConsumption.resultAmt = [NSNumber numberWithDouble:[self.container.currentVol doubleValue] - newAmt];
-        
-        [self.container addConsumptionsObject:newConsumption];
-        self.container.currentVol = [NSNumber numberWithDouble:[self.container.currentVol doubleValue] - newAmt];
-        
-        NSError *error = nil;
-        if (![context save:&error]) {
-            // Replace this implementation with code to handle the error appropriately.
-            // abort() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development. 
-            NSLog(@"Unresolved error %@, %@", error, [error userInfo]);
-            abort();
-        }
-        
-        NSLog(@"reloading table...");
-        
-        self.currVolLabel.text = [NSString stringWithFormat:@"%4.2f mL", [self.container.currentVol doubleValue]];
-        
-        [self.tableView reloadData];
     }
     
     /*if (sender == self.takePicture){
